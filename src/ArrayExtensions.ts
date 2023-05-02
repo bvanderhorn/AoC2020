@@ -31,6 +31,7 @@ declare global {
         includesAll(array: any[]) : boolean;
         includes2(array: any[]) : boolean;
 	    includesAny(array: any[]) : boolean;
+        presentInAll() : any[];
         shared(array: any[]) : any[];
         last(): any;
         min(): number;
@@ -425,6 +426,18 @@ if (!Array.prototype.includesAny) {
             return  this.some(r => array.includes2(r));
          }
     });
+}
+
+if (!Array.prototype.presentInAll) {
+    // return all elements that are present in all arrays
+    Object.defineProperty(Array.prototype, 'presentInAll', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function presentInAll(this: any[][]): any[] {
+            return this.reduce((a, b) => a.filter(c => b.includes(c)));
+        }
+    }
 }
 
 if (!Array.prototype.includesAll) {
