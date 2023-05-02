@@ -43,6 +43,7 @@ declare global {
 	    dict(name:any): any;
         mapij(make:(i:number, j:number,x:any) => any) : any[][];
         mape(make: (x:any) => any) : any[];
+        match(regex: RegExp) : any[];
         subfilter(matches: (x: any) => boolean) : any[][];
         transpose() : any[][];
 
@@ -146,6 +147,18 @@ if(!Array.prototype.mape) {
 	configurable: false,
 	value: function mape(this: any[][], make:(x:any) => any) : any[] {
         return this.map(e =>  Array.isArray(e) ? e.mape(make) : make(e));
+        }
+    });
+}
+
+if(!Array.prototype.match) {
+    // apply a regex match to each element and return the matches
+    Object.defineProperty(Array.prototype, 'match', {
+        enumerable: false,
+        writable:false,
+        configurable: false,
+        value: function match(this: any[][], regex:RegExp) : any[] {
+            return this.mape(e => e.match(regex).slice(0));
         }
     });
 }
