@@ -117,3 +117,27 @@ export function ea(len:number|number[],fill:any = undefined) : any[] {
 export function progress(counter:number,total:number, intervals:number = 100) {
   if (counter % Math.floor(total/intervals) === 0) print((counter/total*100).toPrecision(3),'% done');
 }
+
+export function dec2bin(dec:number) : string {
+    return (dec >>> 0).toString(2);
+}
+
+export function dec2hex(dec:number) : string {
+    return dec.toString(16);
+}
+
+export function bin2dec(bin:string) : number {
+    return parseInt(bin,2);
+}
+
+export function hex2dec(hex:string) : number {
+    return parseInt(hex,16);
+}
+
+export function bin2hex(bin:string) : string {
+    return parseInt(bin,2).toString(16);
+}
+
+export function hex2bin(hex:string) : string {
+    return parseInt(hex,16).toString(2);
+}
