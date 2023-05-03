@@ -38,6 +38,8 @@ declare global {
         max(): number;
         split(str:(string|RegExp)): any[][];
         replace(str:(string|RegExp), replacement:string): any[];
+        match(regex: RegExp) : any[];
+        match(regex: RegExp, onlySubs:boolean) : any[];
         trim() : any[];
         copy() : any[];
         unique(): any[];
@@ -45,7 +47,6 @@ declare global {
 	    dict(name:any): any;
         mapij(make:(i:number, j:number,x:any) => any) : any[][];
         mape(make: (x:any) => any) : any[];
-        match(regex: RegExp) : any[];
         subfilter(matches: (x: any) => boolean) : any[][];
         transpose() : any[][];
 
@@ -159,8 +160,8 @@ if(!Array.prototype.match) {
         enumerable: false,
         writable:false,
         configurable: false,
-        value: function match(this: any[][], regex:RegExp) : any[] {
-            return this.mape(e => e.match(regex).slice(0));
+        value: function match(this: any[][], regex:RegExp, onlySubs:boolean = false) : any[] {
+            return this.mape(e => onlySubs ? e.match(regex).slice(1) : e.match(regex).slice(0));
         }
     });
 }
