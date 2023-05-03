@@ -30,15 +30,13 @@ h.print("part 1: ", state1.value, " (after ",state1.visited.length," instruction
 var possibleFaultyInstructions = state1.visited.filter(i => ["jmp", "nop"].includes(instructions[i][0]));
 h.print("possible faulty instructions: ", possibleFaultyInstructions.length);
 var state2: State;
-var faultyInstruction = -1;
 for (const i of possibleFaultyInstructions) {
     var newInstructions = instructions.copy();
     newInstructions[i][0] = newInstructions[i][0] == "jmp" ? "nop" : "jmp";
     state2 = doRun(newInstructions);
     // h.print("fixing instruction ",i," => valid: ", state2.valid,", value: ", state2.value,", reason: ", state2.reason, ", (after ",state2.visited.length," instructions)");
     if (state2.valid) {
-        faultyInstruction = i;
+        h.print("part 2: ", state2!.value, " (fixed instruction ",i,", after ", state2!.visited.length," instructions)");
         break;
     }
 }
-h.print("part 2: ", state2!.value, " (fixed instruction ",faultyInstruction,", after ", state2!.visited.length," instructions)");
