@@ -37,6 +37,7 @@ declare global {
         min(): number;
         max(): number;
         split(str:(string|RegExp)): any[][];
+        replace(str:(string|RegExp), replacement:string): any[];
         trim() : any[];
         copy() : any[];
         unique(): any[];
@@ -256,6 +257,18 @@ if (!Array.prototype.split) {
             return this.map(el => el.split(str));
         }
     });
+}
+
+if (!Array.prototype.replace) {
+    // replace all string sub elements recursively
+    Object.defineProperty(Array.prototype, 'replace', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function replace(this: any[],str:(string|RegExp),newstr:string): any[] {
+            return this.map(el => el.replace(str,newstr));
+        }
+    }
 }
 
 if (!Array.prototype.tonum) {
