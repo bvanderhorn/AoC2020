@@ -19,11 +19,23 @@ h.print("part 1: ", containing.unique().length);
 
 // part 2
 var contained : number = 0;
-var remaining = [checkBag];
-while (remaining.length > 0 ) {
-    var current = remaining.shift();
-    var containedCurrent = rules.filter((r) => getContaining(r) == current).map((r) => getContained(r))[0];
-    contained += containedCurrent.map((r) => parseInt(r[0])).sum();
-    remaining = remaining.concat(containedCurrent.map((r) => r[1]));
+type Bag = {
+    name: string,
+    multiplier : number
+}
+var remaining2 : Bag[] = [{
+    name: checkBag,
+    multiplier: 1
+}];
+while (remaining2.length > 0 ) {
+    var currentBag = remaining2.shift();
+    var containedCurrent = rules.filter((r) => getContaining(r) == currentBag!.name).map((r) => getContained(r))[0];
+    contained += containedCurrent.map((r) => parseInt(r[0])).sum()*currentBag!.multiplier;
+    remaining2 = remaining2.concat(containedCurrent.map((r) => {
+        return {
+            name: r[1],
+            multiplier: parseInt(r[0])*currentBag!.multiplier
+        };
+    }));
 }
 h.print("part 2: ", contained);
