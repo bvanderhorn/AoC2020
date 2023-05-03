@@ -269,7 +269,7 @@ if (!Array.prototype.replace) {
         value: function replace(this: any[],str:(string|RegExp),newstr:string): any[] {
             return this.map(el => el.replace(str,newstr));
         }
-    }
+    });
 }
 
 if (!Array.prototype.tonum) {
@@ -451,7 +451,7 @@ if (!Array.prototype.presentInAll) {
         value: function presentInAll(this: any[][]): any[] {
             return this.reduce((a, b) => a.filter(c => b.includes(c)));
         }
-    }
+    });
 }
 
 if (!Array.prototype.includesAll) {
