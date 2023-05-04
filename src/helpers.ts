@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { cOff, colorNameArray, colorValueArray } from "./ArrayExtensions";
 export * from "./ArrayExtensions";
 
 const sourceFolder = '../../src/';
@@ -35,6 +36,16 @@ export function read(day:number,filename:string, options:string='') : any[] {
 }
 
 export function print(...input:any[]) {
+    // replace special color indicators
+    for (var i= 0; i < input.length; i++) {
+        if (typeof input[i] === 'string') {
+            var colors = input[i].matchAll(/\@\@(\w)/g);
+            for (const color of colors) {
+                input[i] = input[i].replace(color[0], colorValueArray[colorNameArray.indexOf(color[1])]);
+            }
+            input[i] = input[i].replace(/\/\@/g, cOff);
+        }
+    }
     console.log(...input);
 }
 

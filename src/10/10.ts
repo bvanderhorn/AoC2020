@@ -21,7 +21,8 @@ var validPermutations = (group: number[]) : number => {
     var p = getActualPermutations(group);
     return p.filter(p => p.slice(1).map((a,i) => a - p[i]).every(d => d <= 3)).length;
 }
-h.print(adapters.printc(a => isMandatory(adapters, adapters.indexOf(a)), "r", ", "));
+h.print("\nmandatory adapters @@rin red/@:")
+adapters.printc(a => isMandatory(adapters, adapters.indexOf(a)), "r", ", ");
 var mandatory = h.range(0, adapters.length).filter(i => isMandatory(adapters, i));
 var groupIndices = mandatory.slice(0, mandatory.length -1).filter((m,i) => mandatory[i+1] !== m+1).map(m => [m, mandatory[mandatory.indexOf(m)+1]]);
 var groups = groupIndices.map(g => adapters.slice(g[0], g[1]+1));
