@@ -28,8 +28,11 @@ declare global {
         col(column:number): any[];
         times(t: number) : any[];
         plus(p:number) : any[];
+        plusEach(p:any[]) : any[];
         mod(m:number) : any[];
         abs() : any[];
+        manhattan() : any[];
+        manhattan(other:any[]) : any[];
         count(element:any): number;
         includesAll(array: any[]) : boolean;
         includes2(array: any[]) : boolean;
@@ -381,6 +384,18 @@ if (!Array.prototype.plus) {
     });
 }
 
+if (!Array.prototype.plusEach) {
+    // add each element of two arrays (recursively)
+    Object.defineProperty(Array.prototype, 'plusEach', {
+        enumerable: false, 
+        writable: false, 
+        configurable: false, 
+        value: function plusEach(this: any[], other:any[]): any[] {
+            return this.map((el,i) => Array.isArray(el) ? el.plusEach(other[i]) : el + other[i]);
+        }
+    });
+}
+
 if (!Array.prototype.mod) {
     // take the modulo of each element with a scalar (recursively)
     Object.defineProperty(Array.prototype, 'mod', {
@@ -401,6 +416,18 @@ if (!Array.prototype.abs) {
         configurable: false, 
         value: function abs(this: any[]): any[] {
             return this.map(el => Array.isArray(el) ? el.abs() : Math.abs(el));
+        }
+    });
+}
+
+if (!Array.prototype.manhattan) {
+    // calculate the manhattan distance between two arrays (recursively)
+    Object.defineProperty(Array.prototype, 'manhattan', {
+        enumerable: false, 
+        writable: false,
+        configurable: false, 
+        value: function manhattan(this: any[], other:any[] = new Array(this.length).fill(0)): any[] {
+            return this.map((el,i) => Array.isArray(el) ? el.manhattan(other[i]) : Math.abs(el - other[i]));
         }
     });
 }
