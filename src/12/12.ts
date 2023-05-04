@@ -11,7 +11,11 @@ var act = (state: State, instruction: string[]) : State => {
     var op = instruction[0];
     var val = +instruction[1];
     return {
-        pos: dirs.includes(op) ? state.pos.plusEach(vecs[dirs.indexOf(op)].times(val)) : state.pos,
+        pos: dirs.includes(op) 
+            ? state.pos.plusEach(vecs[dirs.indexOf(op)].times(val)) 
+            : op == "F" 
+                ? state.pos.plusEach(vecs[dirs.indexOf(state.dir)].times(val)) 
+                : state.pos,
         dir: turns.includes(op) ? dirs.get(dirs.indexOf(state.dir) + turnvecs[turns.indexOf(op)]*val/90 ) : state.dir
     }
 }
