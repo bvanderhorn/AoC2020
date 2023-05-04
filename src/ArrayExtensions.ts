@@ -106,7 +106,7 @@ if(!Array.prototype.printc) {
 	enumerable: false,
 	writable:false,
 	configurable: false,
-	value: function printc(this: any[][], matches:(x:any) => boolean, color:string = 'r', j1:string = '',j2:string='\n', sub: number | number[]) : void {
+	value: function printc(this: any[], matches:(x:any) => boolean, color:string = 'r', j1:string = '',j2:string='\n', sub: number | number[]) : void {
             console.log(this.stringc(matches,color,j1,j2, sub));
         }
     });
@@ -118,14 +118,21 @@ if(!Array.prototype.stringc) {
 	enumerable: false,
 	writable:false,
 	configurable: false,
-	value: function stringc(this: any[][], matches:(x:any) => boolean, color:string, j1:string = '', j2:string='\n', sub: number|number[] = 0) : string {
+	value: function stringc(this: any[], matches:(x:any) => boolean, color:string, j1:string = '', j2:string='\n', sub: number|number[] = 0) : string {
             var startc = [white, green, red, yellow, cyan, blue, magenta];
             var colors = ['w','g','r','y','c', 'b','m'];
             var end = cOff;
             var start:string = startc[colors.indexOf(color)];
-            if (sub == 0) return this.map(l=> l.map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1)).join(j2);
-            if (typeof sub == 'number') return this.slice(0,sub).map(l=> l.slice(0,sub).map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1)).join(j2);
-            return this.slice(0,sub[0]).map(l=> l.slice(0,sub[1]).map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1)).join(j2);
+            if (this[0] instanceof Array) {
+                if (sub == 0) return this.map((l:any[]) => l.map(x=> matches(x) ? `${start}${x}${end}`: `${x}`).join(j1)).join(j2);
+                if (typeof sub == 'number') return this.slice(0,sub).map((l:any[]) => l.slice(0,sub).map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1)).join(j2);
+                return this.slice(0,sub[0]).map((l:any[]) => l.slice(0,sub[1]).map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1)).join(j2);
+            } else {
+                if (sub == 0) return this.map(x=> matches(x) ? `${start}${x}${end}`: `${x}`).join(j1);
+                if (typeof sub == 'number') return this.slice(0,sub).map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1);
+                return this.slice(0,sub[0]).map(x => matches(x) ? `${start}${x}${end}`: `${x}`).join(j1);
+            }
+            
         }
     });
 }
