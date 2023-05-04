@@ -36,6 +36,7 @@ declare global {
 	    includesAny(array: any[]) : boolean;
         presentInAll() : any[];
         shared(array: any[]) : any[];
+        get(index: number) : any;
         last(): any;
         min(): number;
         max(): number;
@@ -73,6 +74,10 @@ declare global {
         stringc(matches: (x: any) => boolean, color:string,j1:string) : string;
         stringc(matches: (x: any) => boolean, color:string,j1:string, j2:string) : string;
         stringc(matches: (x: any) => boolean, color:string,j1:string, j2:string, sub:number|number[]) : string;
+    }
+
+    interface String {
+        get(index: number) : string;
     }
 }
 
@@ -481,6 +486,32 @@ if (!Array.prototype.range) {
         configurable: false, 
         value: function range(this: any[],start:number = 0): number[] {
             return Array.from({length: (this.length - start)}, (v, k) => k + start);
+        }
+    });
+}
+
+if (!Array.prototype.get) {
+    // get element of array at any given position, 
+    // even if position is negative or larger than array length
+    Object.defineProperty(Array.prototype, 'get', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function get(this: any[], index:number): any {
+            return this[(index % this.length + this.length) % this.length];
+        }
+    });
+}
+
+if (!String.prototype.get) {
+    // get character of string at any given position, 
+    // even if position is negative or larger than string length
+    Object.defineProperty(String.prototype, 'get', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function get(this: string, index:number): string {
+            return this[(index % this.length + this.length) % this.length];
         }
     });
 }
