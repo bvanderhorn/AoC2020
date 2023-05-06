@@ -29,14 +29,14 @@ var checkMatches = (matches: number[][], m1: Multiplier, m2: Multiplier) : void 
         h.print("check match", m, "with multipliers" , m1, ",", m2, ": => ", x1, x2, x1 == x2)
     });
 }
-//var addToParents = (m: Multiplier) : Multiplier[] => (m.parents == null ? [] : m.parents).concat([{Initial: m.Initial, Interval: m.Interval}]);
+var addToParents = (m: Multiplier) : Multiplier[] => (m.parents == null ? [] : m.parents).concat([{Initial: m.Initial, Interval: m.Interval}]);
 var getAllowedMultipliers = (m1: Multiplier, m2: Multiplier) : Multiplier[] => {
     var matches = firstXMatches(m1, m2, 2);
-    return [0,1].map(i => ({parents: [i==0? m1 : m2], Initial: matches[0][i], Interval: matches[1][i] - matches[0][i]}));
+    return [0,1].map(i => ({parents: i==0? addToParents(m1) : addToParents(m2), Initial: matches[0][i], Interval: matches[1][i] - matches[0][i]}));
 }
 var getReducedMultipliersOfFirst = (multipliers: Multiplier[]) : Multiplier[] => {
     var reducedMultipliers : Multiplier[] = [];
-    for (const i of h.range(1, buses.length)) reducedMultipliers.push(getAllowedMultipliers(multipliers[0], multipliers[i])[0]);
+    for (const i of h.range(1, multipliers.length)) reducedMultipliers.push(getAllowedMultipliers(multipliers[0], multipliers[i])[0]);
     return reducedMultipliers;
 }
 var buses2 : Multiplier[] = rawbuses.map((b,i) => [i,b]).filter(b => b[1] != 'x').map(b => [b[0], +b[1]]).sort((a,b) => b[1] - a[1]).map(b => ({Initial: -b[0], Interval: b[1]}));
@@ -46,4 +46,6 @@ checkMatches(matches, buses2[0], buses2[1]);
 var deltas = matches.slice(1).map((m,i) => [m[0] - matches[i][0], m[1] - matches[i][1]]);
 h.print(deltas);
 // h.print(h.stringify(getAllowedMultipliers(buses2[0], buses2[1])));
-h.print(h.stringify(getReducedMultipliersOfFirst(buses2)));
+var reducedBuses = getReducedMultipliersOfFirst(buses2);
+var evenMoreReducedBuses = getReducedMultipliersOfFirst(reducedBuses);
+h.print(h.stringify(evenMoreReducedBuses));
