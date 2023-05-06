@@ -38,6 +38,11 @@ var getAllMultiplierCouples = (buses: number[][]) : Multiplier[] => {
     for (const i of h.range(0, buses.length -1)) multipliers.push(...getAllowedMultipliers(buses[i], buses[i+1]));
     return multipliers;
 }
+var getAllMultipliersOfGivenBus = (buses: number[][], busIndex: number) : Multiplier[] => {
+    var multipliers : Multiplier[] = [];
+    for (const i of h.range(0, buses.length)) if (i != busIndex) multipliers.push(getAllowedMultipliers(buses[busIndex], buses[i])[0]);
+    return multipliers;
+}
 var buses2 : number[][] = rawbuses.map((b,i) => [i,b]).filter(b => b[1] != 'x').map(b => [b[0], +b[1]]).sort((a,b) => b[1] - a[1]);
 h.print(buses2);
 var matches = firstXMatches(buses2[0], buses2[1], 3);
@@ -45,4 +50,4 @@ checkMatches(matches, buses2[0], buses2[1]);
 var deltas = matches.slice(1).map((m,i) => [m[0] - matches[i][0], m[1] - matches[i][1]]);
 h.print(deltas);
 // h.print(h.stringify(getAllowedMultipliers(buses2[0], buses2[1])));
-h.print(h.stringify(getAllMultiplierCouples(buses2)));
+h.print(h.stringify(getAllMultipliersOfGivenBus(buses2, 0)));
