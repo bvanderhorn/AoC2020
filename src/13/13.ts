@@ -7,6 +7,11 @@ var firstBus = buses.map((b:number) => [b, b - (t0 % b)]).sort((a:number[], b:nu
 h.print("part 1: first bus is ", firstBus[0], " in ", firstBus[1], " minutes, answer is ", firstBus[0] * firstBus[1]);
 
 // part 2
+type Multiplier = {
+    bus: number[],
+    Initial: number,
+    Interval: number
+}
 var firstXMatches = (bus1: number[], bus2: number[], nofMatches: number) : number[][] => {
     var matches : number[][] = [];
     var n1 = 1;
@@ -24,9 +29,14 @@ var checkMatches = (matches: number[][], bus1: number[], bus2: number[]) : void 
         h.print("check match", m, "with buses" , bus1, ",", bus2, ": => ", x1, x2, x1 == x2)
     });
 }
+var getAllowedMultipliers = (bus1: number[], bus2: number[]) : Multiplier[] => {
+    var matches = firstXMatches(bus1, bus2, 2);
+    return [0,1].map(i => ({bus: i==0? bus1 : bus2, Initial: matches[0][i], Interval: matches[1][i] - matches[0][i]}));
+}
 var buses2 : number[][] = rawbuses.map((b,i) => [i,b]).filter(b => b[1] != 'x').map(b => [b[0], +b[1]]).sort((a,b) => b[1] - a[1]);
 h.print(buses2);
-var matches = firstXMatches(buses2[0], buses2[1], 10);
+var matches = firstXMatches(buses2[0], buses2[1], 3);
 checkMatches(matches, buses2[0], buses2[1]);
 var deltas = matches.slice(1).map((m,i) => [m[0] - matches[i][0], m[1] - matches[i][1]]);
 h.print(deltas);
+h.print(h.stringify(getAllowedMultipliers(buses2[0], buses2[1])));
