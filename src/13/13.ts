@@ -37,9 +37,16 @@ var getAllowedMultipliers = (m1: Multiplier, m2: Multiplier) : Multiplier[] => {
 var getReducedMultipliersOfFirst = (multipliers: Multiplier[]) : Multiplier[] => {
     var reducedMultipliers : Multiplier[] = [];
     for (const i of h.range(1, multipliers.length)) reducedMultipliers.push(getAllowedMultipliers(multipliers[0], multipliers[i])[0]);
-    return reducedMultipliers;
+    return reducedMultipliers.sort((a,b) => b.Interval - a.Interval);
 }
-var buses2 : Multiplier[] = rawbuses.map((b,i) => [i,b]).filter(b => b[1] != 'x').map(b => [b[0], +b[1]]).sort((a,b) => b[1] - a[1]).map(b => ({Initial: -b[0], Interval: b[1]}));
+var getNFromRemainingMultipliers = (multipliers: Multiplier[]) : number => {
+    if (multipliers.length == 1) return multipliers[0].Initial;
+    var reduced = getReducedMultipliersOfFirst(multipliers);
+    var N = getNFromRemainingMultipliers(reduced);
+    return N * multipliers[0].Interval + multipliers[0].Initial;
+}
+
+var buses2 : Multiplier[] = rawbuses.map((b,i) => [i,b]).filter(b => b[1] != 'x').map(b => ({Initial: -b[0], Interval: +b[1]})).sort((a,b) => b.Interval - a.Interval);
 h.print(buses2);
 var matches = firstXMatches(buses2[0], buses2[1], 3);
 checkMatches(matches, buses2[0], buses2[1]);
@@ -49,3 +56,4 @@ h.print(deltas);
 var reducedBuses = getReducedMultipliersOfFirst(buses2);
 var evenMoreReducedBuses = getReducedMultipliersOfFirst(reducedBuses);
 h.print(h.stringify(evenMoreReducedBuses));
+h.print("part 2: ",getNFromRemainingMultipliers(buses2));
