@@ -1,25 +1,14 @@
 import * as h from '../helpers';
-type Spoken = {
-    number: number,
-    indices: number[]
-}
+var part = 2;
 var numbers = h.read(15, "numbers.txt")[0].split(',').map((n:string) => +n);
-var spoken : Spoken[] = numbers.slice(0, numbers.length-1).map((n:number,i:number) => ({number: n, indices: [i]}));
+var spoken = new Map<number, number>();
+numbers.slice(0, numbers.length-1).map((n:number,i:number) => spoken.set(n, i));
 var last = numbers[numbers.length-1];
-var inOrder = numbers;
-for (const i of h.range(numbers.length, 2020)) {
-    var lastSpoken = spoken.find(s => s.number == last);
-    if (lastSpoken === undefined) {
-        spoken.push({number: last, indices: [i-1]});
-        last = 0;
-    } else {
-        lastSpoken.indices.push(i-1);
-        last = lastSpoken.indices[lastSpoken.indices.length-1] - lastSpoken.indices[lastSpoken.indices.length-2];
-    }
-    inOrder.push(last);
+for (const i of h.range(numbers.length, part == 1 ? 2020 : 30000000)) {
+    h.progress(i, 30000000, 100);
+    var previous = spoken.get(last);
+    spoken.set(last, i-1);
+    if (previous === undefined) last = 0;
+    else last= i-1- previous;
 }
-
-h.print("part 1: ", inOrder[2019]);
-h.write(15, 'spokenInOrder.txt', inOrder.join('\n'));
-var zeroIndices = spoken.find(s => s.number == 0)!.indices;
-h.write(15, 'zeroIndices.txt', zeroIndices!.slice(1).map((x, i) => x - zeroIndices![i]).join('\n'));
+h.print("part ",part,": ", last);
