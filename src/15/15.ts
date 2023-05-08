@@ -21,3 +21,5 @@ for (const i of h.range(numbers.length, 2020)) {
 
 h.print("part 1: ", inOrder[2019]);
 h.write(15, 'spokenInOrder.txt', inOrder.join('\n'));
+var zeroIndices = spoken.find(s => s.number == 0)!.indices;
+h.write(15, 'zeroIndices.txt', zeroIndices!.slice(1).map((x, i) => x - zeroIndices![i]).join('\n'));
