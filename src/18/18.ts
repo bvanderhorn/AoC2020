@@ -11,10 +11,17 @@ var evaluateLR = (expression:string) : number => {
     }
     return result;
 }
-var evaluate = (expression:string) : number => {
+var evaluateAddFirst = (expression:string) : number => {
     var newExpression = expression + "";
-    while (newExpression.includes('(')) newExpression = newExpression.replace(/\(([^()]+)\)/g, (_, p1) => evaluateLR(p1).toString());
+    while (newExpression.includes('+')) newExpression = newExpression.replace(/(\d+) \+ (\d+)/g, (_, p1, p2) => (+p1 + +p2) + "");
     return evaluateLR(newExpression);
 }
+var evaluate = (expression:string, part: number) : number => {
+    var newExpression = expression + "";
+    var func = part == 1 ? evaluateLR : evaluateAddFirst;
+    while (newExpression.includes('(')) newExpression = newExpression.replace(/\(([^()]+)\)/g, (_, p1) => func(p1) + "");
+    return func(newExpression);
+}
 
-h.print("part 1:", expressions.map(evaluate).sum());
+h.print("part 1:", expressions.map(x => evaluate(x, 1)).sum());
+h.print("part 2:", expressions.map(x => evaluate(x, 2)).sum());
