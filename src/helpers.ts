@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { cOff, colorNameArray, colorValueArray } from "./ArrayExtensions";
+import { cOff, colorNameArray, colorValueArray , equals2} from "./ArrayExtensions";
 export * from "./ArrayExtensions";
 
 const sourceFolder = '../../src/';
@@ -69,7 +69,33 @@ export function isDivisible(num:number, div:number){
 }
 
 export function overlaps(interval1:number[], interval2:number[]) : boolean {
+    // check if two intervals overlap
     return interval1[0]<=interval2[1] && interval1[1]>=interval2[0]; 
+}
+
+export function mergeIntervals(intervals: number[][]) : number[][] {
+    // merge overlapping intervals
+    var merged: number[][] = [];
+    var current = intervals[0].copy();
+    for (let i=1;i<intervals.length;i++) {
+        if (overlaps(current, intervals[i])) {
+            current = [Math.min(current[0], intervals[i][0]), Math.max(current[1], intervals[i][1])];
+        } else {
+            merged.push(current);
+            current = intervals[i];
+        }
+    }
+    merged.push(current);
+    
+    return equals2(merged, intervals) ?  merged : mergeIntervals(merged);
+}
+
+export function isInInterval(interval:number[], number:number) : boolean {
+    return number >= interval[0] && number <= interval[1];
+}
+
+export function isInIntervals(intervals:number[][], number:number) : boolean {
+    return intervals.some(interval => isInInterval(interval, number));
 }
 
 export function range(start:number, end:number) : number[] {

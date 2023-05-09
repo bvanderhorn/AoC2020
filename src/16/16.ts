@@ -6,4 +6,10 @@ var tickets = ticketsRaw.slice(1).split(',').tonum();
 
 h.print(rules);
 h.print(myTicket);
-h.print(tickets);
+h.print(tickets.slice(0,2));
+
+// part 1
+var allIntervals = rules.map((r:string[]) => r.slice(1)).split('-').tonum().flat();
+var combinedIntervals = h.mergeIntervals(allIntervals);
+h.print(allIntervals);
+h.print(combinedIntervals);
