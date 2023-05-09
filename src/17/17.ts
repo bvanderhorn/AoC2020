@@ -9,9 +9,10 @@ var neighbors = h.getnbDim(dims);
 var getNbSum = (cube:number[], cubes:number[][], neighbors: number[][]) : number => neighbors.map((n:number[]) => cube.plusEach(n)).filter((c:number[]) => cubes.includes2(c)).length;
 var getInterestingCubes = (cubes:number[][], neighbors: number[][]) : number[][] => cubes.flatMap((c:number[]) => neighbors.map((n:number[]) => c.plusEach(n))).concat(cubes).unique();
 
-var cubes = cubes0.copy();
+var cubes = cubes0.map((c:number[]) => part == 1 ? c : c.concat([0]));
 for (var c = 0; c < cycles; c++) {
     var interestingCubes = getInterestingCubes(cubes, neighbors);
+    h.print("cycle ",c+1,": # cubes to check:", interestingCubes.length);
     var newCubes = [];
     for (const cube of interestingCubes) {
         var nbSum = getNbSum(cube, cubes, neighbors);
@@ -20,7 +21,7 @@ for (var c = 0; c < cycles; c++) {
         }
         else if (nbSum == 3) newCubes.push(cube); 
     }
-    h.print("cycle ",c+1,": ", newCubes.length);
+    h.print(" -> active cubes:", newCubes.length);
     cubes = newCubes;
 }
-h.print("part ",part,": ", cubes.length);
+h.print("part ",part,":", cubes.length);
