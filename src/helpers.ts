@@ -145,6 +145,13 @@ export function getnb(pos:number[], dyi:number[]|number = 0, dxi:number[]|number
     return nb;
 }
 
+export function getndb3d() : number[][] {
+    var dirs = [-1, 0, 1];
+    var neighbors :number[][] = [];
+    for (const i of dirs) for (const j of dirs) for (const k of dirs) if(!equals2([i,j,k],[0,0,0])) neighbors.push([i,j,k]);
+    return neighbors;
+}
+
 export function ea(len:number|number[],fill:any = undefined) : any[] {
         if (Array.isArray(len) && len.length > 1) return ea(len[0]).map(_ => ea(len.slice(1),fill));
         if (Array.isArray(len)) return ea(len[0],fill);
