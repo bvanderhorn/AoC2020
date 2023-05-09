@@ -13,3 +13,7 @@ var allIntervals = rules.map((r:string[]) => r.slice(1)).split('-').tonum().flat
 var combinedIntervals = h.mergeIntervals(allIntervals);
 h.print(combinedIntervals);
 h.print("part 1:", tickets.flat().filter((n:number) => !h.isInIntervals(combinedIntervals,n)).sum());
+
+// part 2
+var validTickets = tickets.filter((t:number[]) => t.every((n:number) => h.isInIntervals(combinedIntervals,n)));
+h.print(validTickets.length);
