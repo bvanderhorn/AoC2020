@@ -449,7 +449,6 @@ if (!Array.prototype.cartesianProduct) {
     });
 }
 
-
 if (!Array.prototype.count) {
     // count of all occurrences of element in array
     Object.defineProperty(Array.prototype, 'count', {
