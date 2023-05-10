@@ -440,7 +440,11 @@ if (!Array.prototype.cartesianProduct) {
         writable: false, 
         configurable: false, 
         value: function cartesianProduct(this: any[][]): any[][] {
-            return this.reduce((a,b) => a.flatMap(d => b.map(e => [d,e].flat())));
+            return this.length == 0 
+            ? this
+            : this.length == 1 
+                ? this[0].map(el => [el])
+                : this.reduce((a,b) => a.flatMap(d => b.map(e => [d,e].flat())));
         }
     });
 }

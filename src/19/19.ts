@@ -1,9 +1,7 @@
 import * as h from '../helpers';
-var [rulesRaw, messages] = h.read(19, "data.txt", "ex");
+var [rulesRaw, messages] = h.read(19, "data.txt");
 var rules = new Map<number, string>();
 rulesRaw.match(/(\d+)\:\s+([^\n]+)/, true).map((r:string[]) => rules.set(+r[0], r[1]));
-
-h.print(rules);
 h.print(messages.slice(0,3));
 
 // part 1
@@ -21,4 +19,5 @@ var getStringsFromRule = (rule:number, rules:Map<number,string>) : string[] => {
     return result;
 }
 
-h.print([['a', 'b'], ['c', 'd'], ['e','f']].cartesianProduct());
+var strings = getStringsFromRule(0, rules);
+h.print("part 1:", messages.filter((m:string) => strings.includes(m)).length);
