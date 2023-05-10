@@ -148,12 +148,7 @@ export function getnb(pos:number[], dyi:number[]|number = 0, dxi:number[]|number
 export function getnbDim(dims: number, higherDims:number[][] = [[]]) : number[][]  {
     // get (distance to) neighbors in n dimensions
     var dirs = [-1, 0, 1];
-    var nb : number[][] = [];
-    for (const i of dirs) nb = nb.concat( higherDims[0].length < (dims - 1)
-            ? getnbDim(dims, higherDims.map((h:number[]) => h.concat([i])))
-            : higherDims.map((h:number[]) => h.concat([i]))
-        );
-    return nb.filter((n:number[]) => !n.every(d => d == 0));
+    return ea(dims, dirs).cartesianProduct().filter((n:number[]) => !n.every(d => d == 0));;
 }
 
 export function ea(len:number|number[],fill:any = undefined) : any[] {

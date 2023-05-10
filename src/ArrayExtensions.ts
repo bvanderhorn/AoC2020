@@ -33,6 +33,7 @@ declare global {
         abs() : any[];
         manhattan() : any[];
         manhattan(other:any[]) : any[];
+        cartesianProduct() : any[][];
         count(element:any): number;
         includesAll(array: any[]) : boolean;
         includes2(array: any[]) : boolean;
@@ -431,6 +432,19 @@ if (!Array.prototype.manhattan) {
         }
     });
 }
+
+if (!Array.prototype.cartesianProduct) {
+    // calculate the cartesian product of N sub-arrays
+    Object.defineProperty(Array.prototype, 'cartesianProduct', {
+        enumerable: false, 
+        writable: false, 
+        configurable: false, 
+        value: function cartesianProduct(this: any[][]): any[][] {
+            return this.reduce((a,b) => a.flatMap(d => b.map(e => [d,e].flat())));
+        }
+    });
+}
+
 
 if (!Array.prototype.count) {
     // count of all occurrences of element in array
