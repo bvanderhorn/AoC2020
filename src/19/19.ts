@@ -20,14 +20,13 @@ var getStringsFromRule = (rule:number, rules:Map<number,string>) : string[] => {
 }
 
 var strings = getStringsFromRule(0, rules);
-// h.print(strings.length);
 h.print("part 1:", messages.filter((m:string) => strings.includes(m)).length);
 
 // part 2
-var s8 = getStringsFromRule(8, rules);
-var s11 = getStringsFromRule(11, rules);
 var s42 = getStringsFromRule(42, rules);
 var s31 = getStringsFromRule(31, rules);
 h.print("42:",s42.length,"\n",s42);
+h.print(s42.map((s:string) => s.length).unique());
 h.print("31:",s31.length,"\n",s31);
+h.print(s31.map((s:string) => s.length).unique());
 
