@@ -571,7 +571,7 @@ if (!Array.prototype.slice2) {
         writable: false,
         configurable: false,
         value: function slice2(this: any[], start:number, end:number = this.length): any[] {
-            return this.slice(start % this.length + this.length, end % this.length + this.length);
+            return this.slice((start % this.length + this.length) % this.length, (end % this.length + this.length) % this.length);
         }
     });
 }
@@ -584,7 +584,7 @@ if (!String.prototype.slice2) {
         writable: false,
         configurable: false,
         value: function slice2(this: string, start:number, end:number = this.length): string {
-            return this.slice(start % this.length + this.length, end % this.length + this.length);
+            return this.slice((start % this.length + this.length) % this.length, (end % this.length + this.length) % this.length);
         }
     });
 }
