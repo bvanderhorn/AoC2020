@@ -30,3 +30,5 @@ h.print(s42.map((s:string) => s.length).unique());
 h.print("31:",s31.length,"\n",s31);
 h.print(s31.map((s:string) => s.length).unique());
 
+// ^^ 42 and 31 are all 8 chars long
+var potentialMessages = messages.filter((m:string) => m.length % 8 == 0);
