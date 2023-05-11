@@ -41,6 +41,7 @@ declare global {
         presentInAll() : any[];
         shared(array: any[]) : any[];
         get(index: number) : any;
+        slice2(start:number, end:number) : any[];
         last(): any;
         min(): number;
         max(): number;
@@ -82,6 +83,7 @@ declare global {
 
     interface String {
         get(index: number) : string;
+        slice2(start:number, end:number) : string;
     }
 }
 
@@ -556,6 +558,33 @@ if (!String.prototype.get) {
         configurable: false,
         value: function get(this: string, index:number): string {
             return this[(index % this.length + this.length) % this.length];
+        }
+    });
+}
+
+
+if (!Array.prototype.slice2) {
+    // slice array at any given position,
+    // even if position is negative or larger than array length
+    Object.defineProperty(Array.prototype, 'slice2', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function slice2(this: any[], start:number, end:number = this.length): any[] {
+            return this.slice(start % this.length + this.length, end % this.length + this.length);
+        }
+    });
+}
+
+if (!String.prototype.slice2) {
+    // slice string at any given position,
+    // even if position is negative or larger than string length
+    Object.defineProperty(String.prototype, 'slice2', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function slice2(this: string, start:number, end:number = this.length): string {
+            return this.slice(start % this.length + this.length, end % this.length + this.length);
         }
     });
 }
