@@ -56,28 +56,31 @@ while (remainingTiles.length > 0) {
     tileField.push(nextLine);
 }
 h.print("tileField:",tileField.length,"x",tileField[0].length);
+// h.print(tileField[0].map(t => t.tile.map(l => l.join(''))));
 
 // ---- flip/crop tiles ----
 var getFlips = (tile:Tile) : string[][][] => {
     var flips = [0,1,2,3].map(i => tile.tile.rotate(i));
-    return flips.concat(flips.map(t => t.reverse()));
+    return flips.concat(flips.map(t => t.transpose()));
 }
 var tileFieldCropped: string[][][][] = tileField.mapij((i:number,j:number,t:Tile) => {
     for (const flip of getFlips(t)) {
-        if ( (i == 0 || tileField[i-1][j].borders.includes(flip[0].join(''))) &&
-             (i == tileField.length-1 || tileField[i+1][j].borders.includes(flip.last().join(''))) &&
-             (j == 0 || tileField[i][j-1].borders.includes(flip.col(0).join(''))) &&
-             (j == tileField[0].length-1 || tileField[i][j+1].borders.includes(flip.col(flip[0].length-1).join(''))) 
-            ) return flip.slice(1, flip.length-1).map(l => l.slice(1,l.length-1));
+        if ( ((i == 0) || tileField[i-1][j].borders.includes(flip[0].join(''))) &&
+             ((i == tileField.length-1) || tileField[i+1][j].borders.includes(flip.last().join(''))) &&
+             ((j == 0) || tileField[i][j-1].borders.includes(flip.col(0).join(''))) &&
+             ((j == tileField[0].length-1) || tileField[i][j+1].borders.includes(flip.col(flip[0].length-1).join(''))) 
+            ) return flip.slice(1, flip.length-1).map(l => l.slice(1,l.length-1).join(''));
     }
 });
+// h.print(tileFieldCropped[0]);
 
 // stitch tiles together
-var tileFieldStitched: string[] = tileFieldCropped.map(line => {
+var tileFieldStitched: string[][] = tileFieldCropped.map(line => {
     var stitchedLine: string[] = [];
     for (var i = 0; i < line[0].length; i++) {
-        stitchedLine.push(line.map(t => t[i].join('')).join(''));
+        stitchedLine.push(line.map(t => t[i]).flat().join(''));
     }
     return stitchedLine;
-}).flat();
-h.print("tileFieldStitched:",tileFieldStitched);
+}).flat().split('');
+h.print("tileFieldStitched:");
+tileFieldStitched.printc(x => x == '#');
