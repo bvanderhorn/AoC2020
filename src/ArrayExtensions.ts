@@ -38,6 +38,7 @@ declare global {
         includesAll(array: any[]) : boolean;
         includes2(array: any[]) : boolean;
 	    includesAny(array: any[]) : boolean;
+        intersect(array: any[]) : any[];
         presentInAll() : any[];
         shared(array: any[]) : any[];
         get(index: number) : any;
@@ -500,6 +501,19 @@ if (!Array.prototype.includesAny) {
          }
     });
 }
+
+if (!Array.prototype.intersect) {
+    // returns new array that contains all unique elements which are in both the first and second array                                        
+    Object.defineProperty(Array.prototype, 'intersect', {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        value: function intersect(this: any[], array:any[]): any[] {
+            return  this.filter(x => array.includes2(x)).unique();
+         }
+    });
+}
+
 
 if (!Array.prototype.presentInAll) {
     // return all elements that are present in all arrays
