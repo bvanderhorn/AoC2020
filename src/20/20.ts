@@ -72,3 +72,12 @@ var tileFieldCropped: string[][][][] = tileField.mapij((i:number,j:number,t:Tile
     }
 });
 
+// stitch tiles together
+var tileFieldStitched: string[] = tileFieldCropped.map(line => {
+    var stitchedLine: string[] = [];
+    for (var i = 0; i < line[0].length; i++) {
+        stitchedLine.push(line.map(t => t[i].join('')).join(''));
+    }
+    return stitchedLine;
+}).flat();
+h.print("tileFieldStitched:",tileFieldStitched);
