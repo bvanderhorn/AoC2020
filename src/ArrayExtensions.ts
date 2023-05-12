@@ -59,6 +59,7 @@ declare global {
         mape(make: (x:any) => any) : any[];
         subfilter(matches: (x: any) => boolean) : any[][];
         transpose() : any[][];
+        rotate(quarts:number) : any[][];
 
         print() : void;
         print(j1:string) : void;
@@ -158,6 +159,22 @@ if (!Array.prototype.transpose) {
     configurable: false,
     value: function transpose(this: any[][]) : any[][] {
             return this[0].map((_, c) => this.map(r => r[c]));
+        }
+    });
+}
+
+if(!Array.prototype.rotate) {
+    // rotate a 2D array by 90 degrees a given number of times
+    Object.defineProperty(Array.prototype, 'rotate', {
+    enumerable: false,
+    writable:false,
+    configurable: false,
+    value: function rotate(this: any[][], quarts: number) : any[][] {
+            var res = this;
+            for (var i = 0; i < quarts; i++) {
+                res = res.transpose().map(l => l.reverse());
+            }
+            return res;
         }
     });
 }

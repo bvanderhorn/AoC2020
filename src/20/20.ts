@@ -18,14 +18,15 @@ var tiles: Tile[] = h.read(20, "tiles.txt").map((l:string[]) => {
 });
 tiles = tiles.map(t => {t.neighbors = getNeighbors(t,tiles); return t;});
 
-var borders = tiles.map(t => getBorders(t.tile)).flat();
+var borders = tiles.map(t => t.borders).flat();
 h.print(borders.unique().map(b => borders.count(b)).unique());
 // ^^ every border is occurring a max of 2 times => if 2 borders match, their tiles MUST be adjacent
 // also: corner tiles have only 2 borders that match any other border
-var cornerTiles = tiles.filter(t => getBorders(t.tile).filter(b => borders.count(b) == 2).length == 4);
+var cornerTiles = tiles.filter(t => t.borders.filter(b => borders.count(b) == 2).length == 4);
 h.print("part 1:",cornerTiles.map(t => t.id),", product:", cornerTiles.map(t => t.id).prod());
 
 // part 2
+// ---- construct tile field ----
 // (0,0)
 var tileField: Tile[][] = [[cornerTiles[0]]]; 
 var remainingTiles = tiles.filter(t => t.id != cornerTiles[0].id);
@@ -55,3 +56,13 @@ while (remainingTiles.length > 0) {
     tileField.push(nextLine);
 }
 h.print("tileField:",tileField.length,"x",tileField[0].length);
+
+// ---- flip/crop tiles ----
+var getFlips = (tile:Tile) : string[][][] => {
+    var flips = [0,1,2,3].map(i => tile.tile.rotate(i));
+    return flips.concat(flips.map(t => t.reverse()));
+}
+var tileFieldCropped: string[][][][] = tileField.mapij((i:number,j:number,t:Tile) =>{
+    var flips = getFlips(t);
+
+});
