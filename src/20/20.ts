@@ -84,3 +84,9 @@ var tileFieldStitched: string[][] = tileFieldCropped.map(line => {
 }).flat().split('');
 h.print("tileFieldStitched:");
 tileFieldStitched.printc(x => x == '#');
+
+// seamonster relative coordinates
+var seamonsterRaw = h.read(20, "seamonster.txt").split('');
+seamonsterRaw.print();
+var seamonster: number[][] = seamonsterRaw.mapij((i,j,x) => x == '#' ? [i,j] : null).flat().filter(x => x != null);
+h.print(seamonster);
