@@ -62,7 +62,13 @@ var getFlips = (tile:Tile) : string[][][] => {
     var flips = [0,1,2,3].map(i => tile.tile.rotate(i));
     return flips.concat(flips.map(t => t.reverse()));
 }
-var tileFieldCropped: string[][][][] = tileField.mapij((i:number,j:number,t:Tile) =>{
-    var flips = getFlips(t);
-
+var tileFieldCropped: string[][][][] = tileField.mapij((i:number,j:number,t:Tile) => {
+    for (const flip of getFlips(t)) {
+        if ( (i == 0 || tileField[i-1][j].borders.includes(flip[0].join(''))) &&
+             (i == tileField.length-1 || tileField[i+1][j].borders.includes(flip.last().join(''))) &&
+             (j == 0 || tileField[i][j-1].borders.includes(flip.col(0).join(''))) &&
+             (j == tileField[0].length-1 || tileField[i][j+1].borders.includes(flip.col(flip[0].length-1).join(''))) 
+            ) return flip.slice(1, flip.length-1).map(l => l.slice(1,l.length-1));
+    }
 });
+
