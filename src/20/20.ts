@@ -59,8 +59,9 @@ h.print("tileField:",tileField.length,"x",tileField[0].length);
 // h.print(tileField[0].map(t => t.tile.map(l => l.join(''))));
 
 // ---- flip/crop tiles ----
-var getFlips = (tile:Tile) : string[][][] => {
-    var flips = [0,1,2,3].map(i => tile.tile.rotate(i));
+var getFlips = (tile:Tile) : string[][][] => getFlipsRaw(tile.tile);
+var getFlipsRaw = (array:any[][]) : any[][][] => {
+    var flips = [0,1,2,3].map(i => array.rotate(i));
     return flips.concat(flips.map(t => t.transpose()));
 }
 var tileFieldCropped: string[][][][] = tileField.mapij((i:number,j:number,t:Tile) => {
@@ -86,7 +87,27 @@ h.print("tileFieldStitched:");
 tileFieldStitched.printc(x => x == '#');
 
 // seamonster relative coordinates
+var getSeamonsterCoordinates = (seamonsterRaw: string[][]) : number[][] => seamonsterRaw.mapij((i,j,x) => x == '#' ? [i,j] : null).flat().filter(x => x != null);
 var seamonsterRaw = h.read(20, "seamonster.txt").split('');
 seamonsterRaw.print();
-var seamonster: number[][] = seamonsterRaw.mapij((i,j,x) => x == '#' ? [i,j] : null).flat().filter(x => x != null);
+var seamonster: number[][] = getSeamonsterCoordinates(seamonsterRaw);
 h.print(seamonster);
+
+// search
+var searchTileField = (tileField:string[][], seamonster: number[][]) : number => {
+    // return all distinct coordinates of '#' which belong to a seamonster
+    var result:number[][] = [];
+    for (var i =0; i < tileField.length - seamonster.map(s => s[0]).max() ; i++){
+        for (var j=0; j < tileField[0].length - seamonster.map(s => s[1]).max(); j++) {
+            var sm = seamonster.map(s => tileField[i+s[0]][j+s[1]]);
+            if (!sm.includes('.')) result = result.concat(seamonster.map(s => [i+s[0], j+s[1]]));
+        }
+    }
+    return result.unique().length;
+}
+
+// search for all 8 seamonster flips
+var total = tileFieldStitched.flat().count('#');
+var scorePerFlip: number[] = getFlipsRaw(seamonsterRaw).map(f => searchTileField(tileFieldStitched, getSeamonsterCoordinates(f)));
+h.print(scorePerFlip);
+h.print("part 2:",total - scorePerFlip.max());
