@@ -151,6 +151,20 @@ export function getnbDim(dims: number, higherDims:number[][] = [[]]) : number[][
     return ea(dims, dirs).cartesianProduct().filter((n:number[]) => !n.every(d => d == 0));;
 }
 
+export function simpleSolve(input: any[][]) : any[] {
+    // simple solve with sweeping and seeing if there is a a field with single solution 
+    // and then removing that from all other fields
+    var solved :number[] = ea(input.length, -1);
+    var unsolved = input;
+    while (unsolved.some((f:number[]) => f.length > 0)) {
+        var solvedThisRound = unsolved.map((f:number[]) => f.length == 1 ? f[0] : -1);
+        unsolved = unsolved.map((f:number[]) => f.filter((m:number) => !solvedThisRound.includes(m)));
+        solved = solved.map((n:number,i:number) => n != -1 ? n : solvedThisRound[i]);
+        if (solvedThisRound.every((n:number) => n == -1)) break;
+    }
+    return solved;
+}
+
 export function ea(len:number|number[],fill:any = undefined) : any[] {
         if (Array.isArray(len) && len.length > 1) return ea(len[0]).map(_ => ea(len.slice(1),fill));
         if (Array.isArray(len)) return ea(len[0],fill);

@@ -21,4 +21,7 @@ h.print(possiblyContaining);
 h.print("part 1:", ingredients.map(l => l.Ingredients.filter(i => !possiblyContaining.includes(i)).length).sum());
 
 // part 2
-var allergensList = Array.from(allergens, (k,v) => {return {allergen: k, ingredients: v}});
+var allergensList = Array.from(allergens, (k,_) => {return {allergen: k[0], ingredients: k[1]}});
+var solvedIngredients = h.simpleSolve(allergensList.map(l => l.ingredients));
+var solved = allergensList.map((a,i) => [a.allergen, solvedIngredients[i]]).sort();
+h.print("part 2:",solved.map(s => s[1]).join(','));

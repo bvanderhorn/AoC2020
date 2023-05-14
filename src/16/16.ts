@@ -19,24 +19,11 @@ var validFields = (tickets: number[][], rule: string[]) => {
     var intervals = rule.slice(1).split('-').tonum();
     return tickets[0].map((_,i) => tickets.map((t:number[]) => t[i]).every((n:number) => h.isInIntervals(intervals,n)) ? i : -1).filter((n:number) => n != -1);
 }
-var sweep = (possibleFields: number[][], n:number[]) : number[][] => possibleFields.map((f:number[]) => f.filter((m:number) => !n.includes(m)));
-var solveFields = (possibleFields: number[][]) => {
-    // try simple solve with sweeping and seeing if there is a a field with single solution and then removing that from all other fields
-    var solved = possibleFields.map((f:number[]) => f.length == 1 ? f[0] : -1);
-    var unsolved = sweep(possibleFields, solved);
-    while (unsolved.some((f:number[]) => f.length > 0)) {
-        var solvedThisRound = unsolved.map((f:number[]) => f.length == 1 ? f[0] : -1);
-        unsolved = sweep(unsolved, solvedThisRound);
-        solved = solved.map((n:number,i:number) => n != -1 ? n : solvedThisRound[i]);
-        if (solvedThisRound.every((n:number) => n == -1)) break;
-    }
-    return solved;
-}
 var validTickets = tickets.filter((t:number[]) => t.every((n:number) => h.isInIntervals(combinedIntervals,n)));
 h.print(validTickets.length);
 var possibleFields = rules.map((r:string[]) => validFields(validTickets,r));
 h.print(possibleFields.map((x:number[]) => JSON.stringify(x)));
-var solved = solveFields(possibleFields);
+var solved = h.simpleSolve(possibleFields);
 h.print(solved);
 h.print("all solved:", solved.every((n:number) => n != -1));
 var departureFields = solved.filter((_,i) => rules[i][0].startsWith("departure"));
