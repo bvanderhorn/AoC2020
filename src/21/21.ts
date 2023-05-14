@@ -16,3 +16,6 @@ for (const line of ingredients) {
 }
 
 h.print(allergens);
+var possiblyContaining = Array.from(allergens.values()).flat().unique();
+h.print(possiblyContaining);
+h.print("part 1:", ingredients.map(l => l.Ingredients.filter(i => !possiblyContaining.includes(i)).length).sum());
