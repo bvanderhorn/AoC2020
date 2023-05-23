@@ -17,6 +17,7 @@ var getDestination = (state: State) : number => {
             if (destination < state.input.min()) {
                 if (state.input.max() < state.leftNext) {
                     state.input.unshift(state.leftNext);
+                    h.printVerbose(v,'added', state.leftNext, 'to LEFT of input: ', state.input);
                     return state.leftNext--;
                 } else {
                     return state.input.max();
@@ -36,18 +37,22 @@ var applyMove = (state: State): State => {
         var push = (part == 1 || curIndex < state.input.length -1) ? state.input.splice((curIndex+1)%state.input.length,1)[0] : iLength++; 
         pickUp.push(push);
     }
-    h.print('pick up:', pickUp.join(', '));
+    h.printVerbose(v,'pick up:', pickUp.join(', '));
     var destination = getDestination(state);
-    h.print('destination:', destination);
+    h.printVerbose(v,'destination:', destination);
+    //h.print(' new state:', JSON.stringify(state));
     const destinationIndex = state.input.findIndex(el => el == destination);
-    h.print('destination index:', destinationIndex);
+    h.printVerbose(v,'destination index:', destinationIndex);
     state.input.splice(destinationIndex+1,0,...pickUp);
+    //h.print(' end of move state:', JSON.stringify(state));
+
     return state;
 }
 
 // part 1
 var part = 2;
-var rounds = 10;
+var v = false;
+var rounds = 1000;
 var initialState : State = {
     input: input,
     curCup: input[0],
@@ -61,9 +66,12 @@ var state = {
     rightNext: initialState.rightNext
 }
 for (let i=0;i<rounds;i++) {
-    h.print('--- move', i+1, '---');
-    h.print('cups:', input.map(el => el == state.curCup ? '('+el+')' : el).join(' '));
+    h.progress(i, rounds, 10);
+    h.printVerbose(v,'--- move', i+1, '---');
+    h.printVerbose(v,'cups:', state.input.map(el => el == state.curCup ? '('+el+')' : el).join(' '));
     state = applyMove(state);
     state.curCup = state.input.get(state.input.findIndex((el:number) => el == state.curCup)+1);
 }
-h.print("part 1:",state.input.join('').split('1').reverse().join(''));
+h.print('--- final state: ', JSON.stringify(state));
+if (part == 1) h.print("part 1:",state.input.join('').split('1').reverse().join(''));
+else h.print("part 2:", state.input[state.input.findIndex(el => el == 1)+1] * state.input[state.input.findIndex(el => el == 1)+2]);

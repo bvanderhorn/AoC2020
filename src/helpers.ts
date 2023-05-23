@@ -35,6 +35,10 @@ export function read(day:number,filename:string, options:string='') : any[] {
     return input.length == 1 ?  input[0] : input;
 }
 
+export function printVerbose(doPrint:boolean, ...input:any[]) {
+    if (doPrint) print(...input);
+}
+
 export function print(...input:any[]) {
     // replace special color indicators
     for (var i= 0; i < input.length; i++) {
