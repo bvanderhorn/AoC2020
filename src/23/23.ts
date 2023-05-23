@@ -21,6 +21,8 @@ var getDestination = (state: State) : number => {
                 } else {
                     return state.input.max();
                 }
+            } else {
+                if (state.input.includes(destination)) return destination;
             }
         }
         
@@ -44,8 +46,8 @@ var applyMove = (state: State): State => {
 }
 
 // part 1
-var part = 1;
-var rounds = 100;
+var part = 2;
+var rounds = 10;
 var initialState : State = {
     input: input,
     curCup: input[0],
