@@ -228,12 +228,17 @@ export class MultiMap<K,V> {
         }
 
         // save as new value
-        var last = this._maps.last();
-        if (last.size == this._maxMapSize) {
-            this._maps.push(new Map<K,V>());
-            last = this._maps.last();
+        // if possible: to an existing map with space
+        for (const m of this._maps){
+            if (m.size < this._maxMapSize){
+                m.set(key, value);
+                return;
+            }
         }
-        last.set(key, value);
+        
+        // else: to a new map
+        this._maps.push(new Map<K,V>());
+        this._maps.last().set(key, value);
     }
 
     public get(key:K) : V|undefined {
