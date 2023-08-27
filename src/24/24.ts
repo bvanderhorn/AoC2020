@@ -24,7 +24,7 @@ var getCoor = (flipLine: string[]) : number[] => {
 }
 
 var toCoor = (tile: string) : number[] => eval(`[${tile}]`);
-var getNbsFromTile = (tile: string) : string[] => nbs.map(nb => toCoor(tile).plusEach(nb)).map(x => x.toString());
+var getNbsFromTile = (tile: string) : string[] => nbs.map(nb => toCoor(tile).plusEach(nb).toString());
 var getAllTilesToConsider = (blackTiles: Set<string>) : Set<string> => {
     var allTiles = new Set<string>();
     blackTiles.forEach(bt => {
@@ -33,7 +33,7 @@ var getAllTilesToConsider = (blackTiles: Set<string>) : Set<string> => {
     })
     return allTiles;
 }
-var getNbBlackTiles = (tile:string, blackTiles: Set<string>) : number => 
+var getBlackNbCount = (tile:string, blackTiles: Set<string>) : number => 
     getNbsFromTile(tile).filter(nb => blackTiles.has(nb.toString())).length;
 
 // execute
@@ -54,11 +54,10 @@ for (const round of h.range(0, rounds)){
     var newBlackTiles = new Set<string>();
     for (const tile of allTiles) {
         var isBlack = blackTiles.has(tile);
-        var nbBlackTiles = getNbBlackTiles(tile, blackTiles);
+        var blackNbCount = getBlackNbCount(tile, blackTiles);
 
-        if ((isBlack && [1,2].includes(nbBlackTiles)) || (!isBlack && nbBlackTiles == 2)) newBlackTiles.add(tile);
+        if ((isBlack && [1,2].includes(blackNbCount)) || (!isBlack && blackNbCount == 2)) newBlackTiles.add(tile);
     }
     blackTiles = newBlackTiles;
 }
-
 h.print("part 2: ", blackTiles.size);
