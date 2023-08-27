@@ -202,3 +202,53 @@ export function bin2hex(bin:string) : string {
 export function hex2bin(hex:string) : string {
     return parseInt(hex,16).toString(2);
 }
+
+export class MultiMap<K,V> {
+    private readonly _maps : Map<K,V>[] = [];
+    private readonly _maxMapSize = Math.pow(2, 24) -1;
+
+    public constructor() {
+        this._maps.push(new Map<K,V>());
+    }
+
+    public has(key: K) : boolean {
+        for (const m of this._maps){
+            if (m.has(key)) return true;
+        }
+        return false;
+    }
+
+    public set(key:K, value:V) : void {
+        // overwrite existing value
+        for (const m of this._maps){
+            if (m.has(key)){
+                m.set(key, value);
+                return;
+            }
+        }
+
+        // save as new value
+        var last = this._maps.last();
+        if (last.size == this._maxMapSize) {
+            this._maps.push(new Map<K,V>());
+            last = this._maps.last();
+        }
+        last.set(key, value);
+    }
+
+    public get(key:K) : V|undefined {
+        var filtered = this._maps.map(x => x.get(key)).filter(x => x != undefined);
+        return filtered.length == 0 ? undefined : filtered[0];
+    }
+
+    public delete(key:K) : void {
+        for (const m of this._maps){
+            if (m.has(key)){
+                m.delete(key);
+                return;
+            }
+        }
+    }
+
+    public size = () : number => this._maps.map(x => x.size).sum();
+}
