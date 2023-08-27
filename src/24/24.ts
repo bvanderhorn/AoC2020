@@ -1,4 +1,3 @@
-import { test } from 'node:test';
 import * as h from '../helpers';
 
 // neighbours (x = e, y = ne)
