@@ -1,4 +1,10 @@
+import { test } from 'node:test';
 import * as h from '../helpers';
+
+// neighbours (x = e, y = ne)
+var nbstr = ['e','w','ne','sw','nw','se'];
+var nbs = [[1,0],[-1,0],[0,1],[0,-1],[-1,1],[1,-1]];
+var getNbCoor = (str: string) : number[] => nbs[nbstr.indexOf(str)];
 
 var dissect = (input: string) : string[] => {
     var leftOver = input;
@@ -11,16 +17,27 @@ var dissect = (input: string) : string[] => {
     return result;
 }
 
-var getCoor = (flipLine: string[]) : number[] => {
-    // x = e, y = ne
-    var dirs = new Map<string, number[]>([ ['e', [1,0]], ['w', [-1,0]], ['ne', [0,1]], ['sw', [0,-1]], ['nw', [-1,1]], ['se', [1,-1]]]);
+var getCoor = (flipLine: string[]) : number[] => {    
     var coor = [0,0];
-    for (const dir of flipLine) coor = coor.plusEach(dirs.get(dir) ?? [0,0]);
+    for (const dir of flipLine) coor = coor.plusEach(getNbCoor(dir) ?? [0,0]);
     return coor;
 }
 
+var toCoor = (tile: string) : number[] => eval(`[${tile}]`);
+var getNbsFromTile = (tile: string) : string[] => nbs.map(nb => toCoor(tile).plusEach(nb)).map(x => x.toString());
+var getAllTilesToConsider = (blackTiles: Set<string>) : Set<string> => {
+    var allTiles = new Set<string>();
+    blackTiles.forEach(bt => {
+        allTiles.add(bt);
+        getNbsFromTile(bt).forEach(x => allTiles.add(x));
+    })
+    return allTiles;
+}
+var getNbBlackTiles = (tile:string, blackTiles: Set<string>) : number => 
+    getNbsFromTile(tile).filter(nb => blackTiles.has(nb.toString())).length;
+
+// execute
 var flips = h.read(24, "flips.txt");
-h.print(dissect(flips[0]));
 
 var blackTiles = new Set<string>();
 for (const flipLine of flips) {
@@ -28,5 +45,20 @@ for (const flipLine of flips) {
     if (blackTiles.has(coor)) blackTiles.delete(coor);
     else blackTiles.add(coor);
 }
-
 h.print("part 1: ", blackTiles.size);
+
+var rounds = 100;
+for (const round of h.range(0, rounds)){
+    h.progress(round, rounds-1, 10);
+    var allTiles = getAllTilesToConsider(blackTiles);
+    var newBlackTiles = new Set<string>();
+    for (const tile of allTiles) {
+        var isBlack = blackTiles.has(tile);
+        var nbBlackTiles = getNbBlackTiles(tile, blackTiles);
+
+        if ((isBlack && [1,2].includes(nbBlackTiles)) || (!isBlack && nbBlackTiles == 2)) newBlackTiles.add(tile);
+    }
+    blackTiles = newBlackTiles;
+}
+
+h.print("part 2: ", blackTiles.size);
