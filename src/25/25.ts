@@ -27,10 +27,12 @@ var loops7 = () : h.MultiMap<number, number> => {
 }
 
 // execute
+console.time("day 25");
 var keys = h.read(25, "publickeys.txt").tonum();
 var loopSet = loops7();
 h.print('loops size:',loopSet.size());
 var loops = keys.map(k => loopSet.get(k)?? -1);
 var secrets = keys.map((k,i) => transform(k, loops[1-i]));
+console.timeEnd("day 25");
 
 h.print("part 1:", secrets);
