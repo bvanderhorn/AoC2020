@@ -1,5 +1,5 @@
 import * as h from '../helpers';
-var input = '389125467'.split('').tonum(); // example: 389125467, mine: 712643589
+var input = '712643589'.split('').tonum(); // example: 389125467, mine: 712643589
 
 class State {
     private readonly _dict = new Map<number, number>;
@@ -112,4 +112,6 @@ class State {
 
 // execute
 new State(input, input[0], 1).moves(100).printSolution();
+console.time('part 2');
 new State(input, input[0], 2).moves(1E7).printSolution();
+console.timeEnd('part 2');
