@@ -5,7 +5,7 @@ type State = {
     leftNext: number,
     rightNext: number
 }
-var input = '712643589'.split('').tonum();
+var input = '389125467'.split('').tonum();
 var getDestination = (state: State) : number => {
     var destination = state.curCup;
     while (true) {
@@ -29,7 +29,7 @@ var getDestination = (state: State) : number => {
         
     }
 }
-var applyMove = (state: State): State => {
+var applyMove = (state: State): void => {
     var pickUp : number[] = [];
     var iLength = state.input.length;
     for (let i=1;i<=3;i++) {
@@ -45,14 +45,12 @@ var applyMove = (state: State): State => {
     h.printVerbose(v,'destination index:', destinationIndex);
     state.input.splice(destinationIndex+1,0,...pickUp);
     //h.print(' end of move state:', JSON.stringify(state));
-
-    return state;
 }
 
 // part 1
 var part = 2;
 var v = false;
-var rounds = 1000;
+var rounds = 100;
 var initialState : State = {
     input: input,
     curCup: input[0],
@@ -65,13 +63,21 @@ var state = {
     leftNext: initialState.leftNext,
     rightNext: initialState.rightNext
 }
+var crr: number[][] = [];
+var curIndex = state.input.findIndex(el => el == state.curCup);
+crr.push(state.input.slice(curIndex, curIndex+3));
 for (let i=0;i<rounds;i++) {
     h.progress(i, rounds, 10);
     h.printVerbose(v,'--- move', i+1, '---');
     h.printVerbose(v,'cups:', state.input.map(el => el == state.curCup ? '('+el+')' : el).join(' '));
-    state = applyMove(state);
+    applyMove(state);
+    
+    
     state.curCup = state.input.get(state.input.findIndex((el:number) => el == state.curCup)+1);
+    var curIndex = state.input.findIndex(el => el == state.curCup);
+    crr.push(state.input.slice(curIndex, curIndex+3));
 }
+h.write(23,'crr.txt', crr.string(','));
 h.print('--- final state: ', JSON.stringify(state));
 if (part == 1) h.print("part 1:",state.input.join('').split('1').reverse().join(''));
 else h.print("part 2:", state.input[state.input.findIndex(el => el == 1)+1] * state.input[state.input.findIndex(el => el == 1)+2]);
